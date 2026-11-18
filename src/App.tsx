@@ -1,0 +1,71 @@
+import { CheckCircle2 } from 'lucide-react';
+import { AuthModal } from './components/AuthModal';
+import { CartDrawer } from './components/CartDrawer';
+import { CheckoutModal } from './components/CheckoutModal';
+import { FavoritesDrawer } from './components/FavoritesDrawer';
+import { Footer } from './components/Footer';
+import { LiveChatWidget } from './components/LiveChatWidget';
+import { MobileBottomBar } from './components/MobileBottomBar';
+import { Navbar } from './components/Navbar';
+import { ProductDetailModal } from './components/ProductDetailModal';
+import { StorefrontHome } from './components/StorefrontHome';
+import { StoreProvider, useStore } from './context/StoreContext';
+
+function AppShell() {
+  const { toastMessage } = useStore();
+  const scrollToSection = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  return (
+    <div dir="rtl" className="min-h-screen flex flex-col bg-[#FAFAF8] text-stone-900">
+      <>
+          <Navbar
+            onNavigateHome={() => {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            onNavigateCategories={() => scrollToSection('categories-section')}
+          />
+
+          <div className="flex-1">
+            <StorefrontHome />
+          </div>
+
+          <Footer onScrollToSection={scrollToSection} />
+
+          <MobileBottomBar
+            onNavigateHome={() => {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            onNavigateCategories={() => scrollToSection('categories-section')}
+          />
+
+          <LiveChatWidget />
+          <ProductDetailModal />
+          <CartDrawer />
+          <FavoritesDrawer />
+          <CheckoutModal />
+          <AuthModal />
+      </>
+
+      {toastMessage && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="fixed bottom-20 md:bottom-6 right-4 sm:right-6 z-[60] bg-stone-900 text-white px-4 py-2.5 rounded-xl shadow-lg text-xs sm:text-sm font-bold inline-flex items-center gap-2 whitespace-nowrap"
+        >
+          <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <StoreProvider>
+      <AppShell />
+    </StoreProvider>
+  );
+}
